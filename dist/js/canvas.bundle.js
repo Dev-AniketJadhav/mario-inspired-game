@@ -86,6 +86,45 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/img/background.png":
+/*!********************************!*\
+  !*** ./src/img/background.png ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "072d51bcc9c09311d4c2a6708b05bddc.png");
+
+/***/ }),
+
+/***/ "./src/img/hills.png":
+/*!***************************!*\
+  !*** ./src/img/hills.png ***!
+  \***************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "cfffe4c371f5e11d372b398a87c51dd0.png");
+
+/***/ }),
+
+/***/ "./src/img/platform.png":
+/*!******************************!*\
+  !*** ./src/img/platform.png ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "ffab39d3487de561be1a081fcfb3806d.png");
+
+/***/ }),
+
 /***/ "./src/js/canvas.js":
 /*!**************************!*\
   !*** ./src/js/canvas.js ***!
@@ -95,114 +134,342 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/js/utils.js");
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_utils__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _src_img_platform_png__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../src/img/platform.png */ "./src/img/platform.png");
+/* harmony import */ var _src_img_background_png__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/img/background.png */ "./src/img/background.png");
+/* harmony import */ var _src_img_hills_png__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/img/hills.png */ "./src/img/hills.png");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+
+
+ // import { init } from 'browser-sync';
+
+console.log(_src_img_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]);
 var canvas = document.querySelector('canvas');
 var c = canvas.getContext('2d');
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-var mouse = {
-  x: innerWidth / 2,
-  y: innerHeight / 2
-};
-var colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']; // Event Listeners
+console.log(c);
+console.log(_typeof(c));
+canvas.width = 1024;
+canvas.height = 576;
+var gravity = 1.5;
 
-addEventListener('mousemove', function (event) {
-  mouse.x = event.clientX;
-  mouse.y = event.clientY;
-});
-addEventListener('resize', function () {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-  init();
-}); // Objects
+var Player = /*#__PURE__*/function () {
+  function Player() {
+    _classCallCheck(this, Player);
 
-var _Object = /*#__PURE__*/function () {
-  function Object(x, y, radius, color) {
-    _classCallCheck(this, Object);
-
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
-    this.color = color;
+    this.position = {
+      x: 100,
+      y: 100
+    };
+    this.velocity = {
+      x: 0,
+      y: 0
+    };
+    this.width = 100, this.height = 100;
   }
 
-  _createClass(Object, [{
+  _createClass(Player, [{
     key: "draw",
     value: function draw() {
-      c.beginPath();
-      c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-      c.fillStyle = this.color;
-      c.fill();
-      c.closePath();
+      c.fillStyle = 'red';
+      c.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
   }, {
     key: "update",
     value: function update() {
       this.draw();
+      this.position.y += this.velocity.y;
+      this.position.x += this.velocity.x;
+
+      if (this.position.y + this.height + this.velocity.y <= canvas.height) {
+        this.velocity.y += gravity;
+      } //else this.velocity.y = 0
+
     }
   }]);
 
-  return Object;
-}(); // Implementation
+  return Player;
+}(); // platform creation
 
 
-var objects;
+var Platform = /*#__PURE__*/function () {
+  function Platform(_ref) {
+    var x = _ref.x,
+        y = _ref.y,
+        image = _ref.image;
+
+    _classCallCheck(this, Platform);
+
+    this.position = {
+      x: x,
+      y: y
+    };
+    this.image = image;
+    this.width = image.width;
+    this.height = image.height;
+  }
+
+  _createClass(Platform, [{
+    key: "draw",
+    value: function draw() {
+      c.drawImage(this.image, this.position.x, this.position.y);
+    }
+  }]);
+
+  return Platform;
+}();
+
+var GenericObject = /*#__PURE__*/function () {
+  function GenericObject(_ref2) {
+    var x = _ref2.x,
+        y = _ref2.y,
+        image = _ref2.image;
+
+    _classCallCheck(this, GenericObject);
+
+    this.position = {
+      x: x,
+      y: y
+    };
+    this.image = image;
+    this.width = image.width;
+    this.height = image.height;
+  }
+
+  _createClass(GenericObject, [{
+    key: "draw",
+    value: function draw() {
+      c.drawImage(this.image, this.position.x, this.position.y);
+    }
+  }]);
+
+  return GenericObject;
+}();
+
+function createImage(imgSrc) {
+  var image = new Image();
+  image.src = imgSrc;
+  return image;
+}
 
 function init() {
-  objects = [];
+  platformImg = createImage(_src_img_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]);
+  player = new Player();
+  genericObject = [new GenericObject({
+    x: 0,
+    y: 0,
+    image: createImage(_src_img_background_png__WEBPACK_IMPORTED_MODULE_1__["default"])
+  }), new GenericObject({
+    x: 0,
+    y: 0,
+    image: createImage(_src_img_hills_png__WEBPACK_IMPORTED_MODULE_2__["default"])
+  })];
+  platforms = [new Platform({
+    x: -3,
+    y: 470,
+    image: platformImg
+  }), new Platform({
+    x: platformImg.width - 6,
+    y: 470,
+    image: platformImg
+  }), new Platform({
+    x: -3,
+    y: 470,
+    image: platformImg
+  }), new Platform({
+    x: platformImg.width * 2 + 100,
+    y: 470,
+    image: platformImg
+  }), new Platform({
+    x: -3,
+    y: 470,
+    image: platformImg
+  }), new Platform({
+    x: platformImg.width * 4 + 400,
+    y: 470,
+    image: platformImg
+  }), new Platform({
+    x: -3,
+    y: 470,
+    image: platformImg
+  }), new Platform({
+    x: platformImg.width * 2 + 800,
+    y: 470,
+    image: platformImg
+  })];
+  scrollOfSet = 0;
+}
 
-  for (var i = 0; i < 400; i++) {// objects.push()
+var platformImg = createImage(_src_img_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]);
+var player = new Player();
+var platforms = [new Platform({
+  x: -3,
+  y: 470,
+  image: platformImg
+}), new Platform({
+  x: platformImg.width - 6,
+  y: 470,
+  image: platformImg
+}), new Platform({
+  x: -3,
+  y: 470,
+  image: platformImg
+}), new Platform({
+  x: platformImg.width * 2 + 100,
+  y: 470,
+  image: platformImg
+}), new Platform({
+  x: -3,
+  y: 470,
+  image: platformImg
+}), new Platform({
+  x: platformImg.width * 4 + 400,
+  y: 470,
+  image: platformImg
+}), new Platform({
+  x: -3,
+  y: 470,
+  image: platformImg
+}), new Platform({
+  x: platformImg.width * 2 + 800,
+  y: 470,
+  image: platformImg
+})];
+var genericObject = [new GenericObject({
+  x: 0,
+  y: 0,
+  image: createImage(_src_img_background_png__WEBPACK_IMPORTED_MODULE_1__["default"])
+}), new GenericObject({
+  x: 0,
+  y: 0,
+  image: createImage(_src_img_hills_png__WEBPACK_IMPORTED_MODULE_2__["default"])
+})];
+var keys = {
+  right: {
+    pressed: false
+  },
+  left: {
+    pressed: false
   }
-} // Animation Loop
-
+};
+var scrollOfSet = 0;
+player.update(); //console.log(platform.draw());
+// animation phase 
 
 function animate() {
   requestAnimationFrame(animate);
-  c.clearRect(0, 0, canvas.width, canvas.height);
-  c.fillText('HTML CANVAS BOILERPLATE', mouse.x, mouse.y); // objects.forEach(object => {
-  //  object.update()
-  // })
+  c.fillStyle = 'white';
+  c.fillRect(0, 0, canvas.width, canvas.height);
+  genericObject.forEach(function (genericObject) {
+    genericObject.draw();
+  });
+  platforms.forEach(function (platform) {
+    platform.draw();
+  });
+  player.update();
+
+  if (keys.right.pressed && player.position.x < 400) {
+    player.velocity.x = 5;
+  } else if (keys.left.pressed && player.position.x > 100) {
+    player.velocity.x = -5;
+  } else {
+    player.velocity.x = 0;
+
+    if (keys.right.pressed) {
+      scrollOfSet += 5;
+      platforms.forEach(function (platform) {
+        platform.position.x -= 5;
+      });
+      genericObject.forEach(function (genericObject) {
+        genericObject.position.x -= 3;
+      });
+    } else if (keys.left.pressed) {
+      scrollOfSet -= 5;
+      platforms.forEach(function (platform) {
+        platform.position.x += 5;
+      });
+      genericObject.forEach(function (genericObject) {
+        genericObject.position.x += 3;
+      });
+    }
+
+    console.log(scrollOfSet);
+  }
+
+  platforms.forEach(function (platform) {
+    if (player.position.y + player.height <= platform.position.y && player.position.y + player.height + player.velocity.y >= platform.position.y && player.position.x + player.width >= platform.position.x && player.position.x <= platform.position.x + platform.width) {
+      player.velocity.y = 0;
+    }
+  }); // console.log(player.update());
+
+  if (scrollOfSet > 1000) {
+    console.log('you won');
+  }
+
+  if (player.position.y > canvas.height) {
+    init();
+    console.log('you lose');
+  }
 }
 
-init();
 animate();
+window.addEventListener('keydown', function (_ref3) {
+  var keyCode = _ref3.keyCode;
 
-/***/ }),
+  // console.log(Event.keyCode);
+  switch (keyCode) {
+    case 65:
+      console.log('left');
+      keys.left.pressed = true;
+      break;
 
-/***/ "./src/js/utils.js":
-/*!*************************!*\
-  !*** ./src/js/utils.js ***!
-  \*************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+    case 83:
+      console.log('down');
+      break;
 
-function randomIntFromRange(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
+    case 68:
+      console.log('right');
+      keys.right.pressed = true;
+      break;
 
-function randomColor(colors) {
-  return colors[Math.floor(Math.random() * colors.length)];
-}
+    case 87:
+      console.log('top');
+      player.velocity.y -= 20;
+      break;
+  }
 
-function distance(x1, y1, x2, y2) {
-  var xDist = x2 - x1;
-  var yDist = y2 - y1;
-  return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-}
+  console.log(keys.right.pressed);
+});
+window.addEventListener('keyup', function (_ref4) {
+  var keyCode = _ref4.keyCode;
 
-module.exports = {
-  randomIntFromRange: randomIntFromRange,
-  randomColor: randomColor,
-  distance: distance
-};
+  // console.log(Event.keyCode);
+  switch (keyCode) {
+    case 65:
+      console.log('left');
+      keys.left.pressed = false;
+      break;
+
+    case 83:
+      console.log('down');
+      break;
+
+    case 68:
+      console.log('right');
+      keys.right.pressed = false;
+      break;
+
+    case 87:
+      console.log('top');
+      player.velocity.y -= 20;
+      break;
+  }
+});
 
 /***/ })
 
